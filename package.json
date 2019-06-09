@@ -24,5 +24,7 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.4.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.1.2"
+  }
 }
