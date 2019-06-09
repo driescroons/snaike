@@ -1,7 +1,14 @@
 @import "~normalize.css";
 
 canvas {
+  border: 2px solid grey;
   &:focus {
     outline: none;
   }
+}
+
+body {
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px solid grey;
 }

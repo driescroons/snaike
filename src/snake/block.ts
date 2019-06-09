@@ -19,8 +19,8 @@ export default class Block {
 
   update() {}
 
-  render(context: CanvasRenderingContext2D) {
-    context.fillStyle = this.color;
+  render(context: CanvasRenderingContext2D, died: boolean) {
+    !died ? (context.fillStyle = this.color) : (context.fillStyle = "lightgrey");
     context.globalAlpha = this.opacity;
     context.fillRect(this.position.x * constants.TILE_WIDTH, this.position.y * constants.TILE_HEIGHT, constants.TILE_WIDTH, constants.TILE_HEIGHT);
   }

@@ -1,7 +1,11 @@
+import * as tf from "@tensorflow/tfjs";
+
 import * as constants from "../constants";
 import "../styles/index.scss";
 import Block from "./block";
 import Vector, { iVector } from "./vector";
+import { NeuralNetwork } from "../brain/brain";
+import Manager from "../manager";
 
 export class Direction {
   public static up: iVector = new Vector({ x: 0, y: -1 });
@@ -10,13 +14,17 @@ export class Direction {
   public static left: iVector = new Vector({ x: -1, y: 0 });
 }
 
+export const directions: iVector[] = [Direction.up, Direction.right, Direction.right, Direction.down];
+
 export class Status {
   public static playing: string = "STATUS_PLAYING";
   public static dying: string = "STATUS_DYING";
   public static dead: string = "STATUS_DEAD";
+  public static paused: string = "STATUS_PAUSED";
+  public static stopped: string = "STATUS_STOPPED";
 }
 
-export default class Application {
+export default class Snake {
   public width: number;
   public height: number;
 
@@ -27,34 +35,60 @@ export default class Application {
   public direction: iVector = Direction.up;
   public food: iVector;
   public score: number = 0;
+  public fitness: number = 0;
   public status: Status = Status.playing;
 
-  constructor(opts: { container: HTMLCanvasElement } = { container: undefined }) {
+  public ttl: number = 0;
+
+  public died: boolean = false;
+  public stopped: boolean = false;
+
+  public manager: Manager;
+  public brain: NeuralNetwork;
+
+  public history = [];
+
+  constructor(opts: { container?: HTMLCanvasElement; brain?: NeuralNetwork | tf.Sequential; manager: Manager } = { container: undefined, brain: undefined, manager: undefined }) {
     this.width = constants.WORLD_WIDTH;
     this.height = constants.WORLD_WIDTH;
 
-    if (opts.container) {
-      this.container = opts.container;
-    } else {
-      const canvas = Application.createContainer();
-      document.body.appendChild(canvas);
-      this.container = canvas;
+    this.container = opts.container;
+    this.manager = opts.manager;
+
+    if (this.container) {
+      this.container.focus();
+      this.context = this.container.getContext("2d");
     }
 
-    this.container.focus();
-    this.context = this.container.getContext("2d");
+    if (!opts.brain) {
+      this.brain = new NeuralNetwork(13, 25, 4);
+    }
+    // else {
+    //   if (opts.brain instanceof NeuralNetwork) {
+    //     this.brain = opts.brain.copy();
+    //   } else {
+    //     this.brain = new NeuralNetwork(opts.brain, 8, 25, 4);
+    //   }
+    // }
 
     this.init();
-    this.update();
     this.render();
+  }
+
+  public mutate() {
+    this.brain.mutate(constants.MUTATION_RATE);
+  }
+
+  public dispose() {
+    this.brain.dispose();
   }
 
   public init() {
     this.reset();
 
-    this.container.onkeydown = e => {
-      this.controls(e);
-    };
+    // this.container.onkeydown = e => {
+    //   this.controls(e);
+    // };
   }
 
   spawnFood() {
@@ -66,15 +100,44 @@ export default class Application {
     }
   }
 
+  public collisionCheck(position: iVector) {
+    return position.x < 0 || position.x > constants.COLUMNS - 1 || position.y < 0 || position.y > constants.ROWS - 1 || this.body.some(block => block.position.equals(position));
+  }
+
   public async update() {
     // if body exists (longer than 0)
+    // let shouldWait;
+
+    if (this.status === Status.stopped) {
+      this.stopped = true;
+      console.log("force stopped");
+    }
+
+    if (this.status === Status.paused) {
+      console.log("PAUSED");
+    }
+
     if (this.status === Status.playing) {
+      this.think();
+
       // check if we're not dead on next step^
       const next = this.body[0].position.clone().add(this.direction);
-      if (next.x < 0 || next.x > constants.COLUMNS - 1 || next.y < 0 || next.y > constants.ROWS - 1 || this.body.some(block => block.position.equals(next))) {
+      if (this.collisionCheck(next) || this.ttl <= 0) {
         this.status = Status.dying;
+        // console.log("DYING", this.ttl > 0 ? "stupid" : "starved");
         return this.update();
+        //return setTimeout(this.update, 100);
+        // return this.update();
       }
+
+      if (Math.abs(this.distance(this.food.x, this.food.y, next.x, next.y)) < Math.abs(this.distance(this.food.x, this.food.y, this.body[0].position.x, this.body[0].position.y))) {
+        this.addScore(1.5);
+      } else {
+        this.addScore(-0.5);
+      }
+      // } else {
+      //   this.addScore(-1);
+      // }
 
       // loop from last block to second block of the body
       // copy i - 1 to i so that every block gets the "next" position
@@ -90,36 +153,114 @@ export default class Application {
       this.body[0].position = next;
 
       if (next.equals(this.food)) {
-        this.addBlockToSnake();
-        this.spawnFood();
+        this.eating();
       }
+
+      this.ttl--;
 
       await new Promise(res => setTimeout(res, constants.TICK));
       return this.update();
     }
 
+    // just check in playing if we're dead. this is a bit useless go go out of above if to just get in here,
+    // to then go in if...
     if (this.status === Status.dying) {
       this.body.forEach(block => {
         block.color = "salmon";
         block.opacity = 1;
       });
       await new Promise(res => setTimeout(res, constants.TICK * 5));
+      // we could pass snake instance
       this.status = Status.dead;
     }
 
     if (this.status === Status.dead) {
-      this.reset();
-      return this.update();
+      if (!this.died) {
+        this.manager.died();
+        this.died = true;
+      }
+
+      // this.reset();
+      // return this.update();
+    }
+  }
+
+  public distance(x1, y1, x2, y2) {
+    var xs = x2 - x1,
+      ys = y2 - y1;
+
+    xs *= xs;
+    ys *= ys;
+
+    return Math.sqrt(xs + ys);
+  }
+
+  public think() {
+    const inputs = [];
+
+    for (let i = 0; i < directions.length; i++) {
+      const direction = directions[i];
+      let next = this.body[0].position.clone().add(direction);
+      const collision = this.collisionCheck(next);
+
+      inputs.push(Number(collision));
+      inputs.push(Number(next.equals(this.food)));
+
+      let foundFood = false;
+      for (let j = 0; j < constants.WORLD_WIDTH && !foundFood; j++) {
+        if (next.equals(this.food)) {
+          inputs.push(Number(true));
+          foundFood = true;
+        }
+      }
+      if (!foundFood) inputs.push(Number(foundFood));
+    }
+
+    // optional input -> for big snakes, we could input if there is a clear way ahead (not blocked off) to the food
+    // console.log(inputs);
+
+    let deltaX = this.body[0].position.x - this.food.x;
+    let deltaY = this.body[0].position.y - this.food.y;
+
+    // console.log();
+
+    inputs.push(Math.round(((Math.atan2(deltaY, deltaX) * 180) / 3.14 / 180) * 100) / 100);
+
+    this.direction = this.brain.predict(inputs);
+
+    // push to our history
+    // this.history.push(inputs);
+  }
+
+  public eating() {
+    this.ttl += constants.TTL;
+    this.addScore(15);
+    this.addBlockToSnake();
+    this.spawnFood();
+  }
+
+  public addScore(amount: number) {
+    if (!this.died) {
+      this.score += amount;
     }
   }
 
   public reset() {
+    // this.brain.fitModel(this.history);
+    // this.brain.dispose();
+
     this.body = [];
+    this.history = [];
     this.direction = Direction.up;
     this.score = 0;
     this.status = Status.playing;
+    this.stopped = false;
+    this.died = false;
+    this.ttl = constants.TTL;
     this.spawnFood();
     this.addBlockToSnake();
+
+    this.update();
   }
 
   public render() {
@@ -133,7 +274,7 @@ export default class Application {
     this.context.fill();
 
     this.body.forEach(block => {
-      block.render(this.context);
+      block.render(this.context, this.died);
     });
 
     // when render is invoked via requestAnimationFrame(this.render) there is
@@ -185,21 +326,11 @@ export default class Application {
       }
       case 32: {
         if (this.status === Status.playing) {
-          this.addBlockToSnake();
+          this.status = Status.paused;
+          console.log("paused");
         }
         break;
       }
     }
-  }
-
-  static createContainer() {
-    const canvas = document.createElement("canvas");
-    // div.setAttribute("id", "canvas-container");
-    canvas.setAttribute("class", "canvas");
-    canvas.setAttribute("width", constants.WORLD_WIDTH as any);
-    canvas.setAttribute("height", constants.WORLD_HEIGHT as any);
-    // so we can use key presses
-    canvas.setAttribute("tabindex", 1 as any);
-    return canvas;
   }
 }
