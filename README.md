@@ -67,6 +67,7 @@ Vector library used:
 - Better state management
 - Refactoring / Cleaning up
 - Choose your inputs
+- Replays of highscores
 
 # Contact
 
