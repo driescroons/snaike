@@ -103,7 +103,6 @@ export default class App extends React.Component<{}, State> {
                         <div className="formGroup">
                           <label htmlFor={field.value}>{state} *</label>
                           <input type="number" {...field} value={field.value} />
-                          {/* <ErrorMessage name={field.value} component="div" className="invalid-feedback" /> */}
                           {form.touched[field.name] && form.errors[field.name] && <span>{form.errors[field.name]}</span>}
                         </div>
                       )}
@@ -115,7 +114,6 @@ export default class App extends React.Component<{}, State> {
           </div>
           <div className={"main"}>
             <div className={"mainWrapper"}>
-              {/* <h2>Snakes</h2> */}
               <div className={"snakes"} ref={this.snakes} />
             </div>
           </div>
@@ -124,9 +122,5 @@ export default class App extends React.Component<{}, State> {
     );
   }
 }
-
-// const div = document.createElement("div");
-// div.setAttribute("class", "root");
-// document.body.appendChild(div);
 
 ReactDOM.render(<App />, document.getElementById("root"));

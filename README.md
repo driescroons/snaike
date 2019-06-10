@@ -47,9 +47,7 @@ Once the packages are installed, run
 
 I initially stumbled upon [Desigining AI: Solving Snake with Evolution](https://becominghuman.ai/designing-ai-solving-snake-with-evolution-f3dd6a9da867) from Peter Binggeser. A really nice article where he explains step by step how you should design a neural network, one specifically for snake. Upon scrolling through the [repository](https://github.com/pbinggeser/snake-ai), I felt it was a little outdated so I decided to see if I could build it from scratch using a more modern approach. (newer packages...) I've used some of his quotes above.
 
-I've scrolled through many projects during the creation and I most definitely wouldn't have been able to create snaike if wasn't for all of the awesome articles, repositories, videos from everyone!
-
-If you're looking to create something similar, make sure to checkout the following repositories as well:
+I've scrolled through many projects during the creation and I most definitely wouldn't have been able to create snaike if wasn't for all of the awesome articles, repositories, videos from everyone here underneath! If you're looking to create something similar, make sure to checkout the following repositories as well:
 
 - https://github.com/Llang8/snake-ai
 - https://towardsdatascience.com/train-ai-to-play-snake-in-your-browser-ca657097d707
@@ -59,6 +57,10 @@ If you're looking to create something similar, make sure to checkout the followi
 - https://github.com/Acidic9/snake-ai
 - https://github.com/DiogoRamos22/Snake_AI
 - https://github.com/guiconti/snake_tensorflowjs
+
+Vector library used:
+
+- https://gist.github.com/sbrl/69a8fa588865cacef9c0
 
 # Roadmap
 

@@ -50,12 +50,7 @@ export default class Manager {
   };
 
   reset = () => {
-    // REUSE containers from dom?
-    // reset snakes
-    // use new improved brains
-
     this.snakes.forEach(snake => {
-      // snake.dispose();
       snake.reset();
     });
     this.alive = Manager.state.populationSize;
@@ -67,15 +62,10 @@ export default class Manager {
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
-    // this.createContainer();
-    // document.body.onkeydown = e => {
-    //   this.controls(e);
-    // };
 
     // pass a container in an object to constructor of Snake if you have 1
     // container: document.getElementById("canvas-container") as HTMLCanvasElement
     [...Array(Manager.state.populationSize)].map((_, i) => {
-      //
       const snake = new Snake({ container: this.createCanvas(), manager: this });
       this.snakes.push(snake);
     });
@@ -92,6 +82,7 @@ export default class Manager {
       this.stopSnakes();
 
       // we need to wait for everyone to be stopped stop..
+      // scuffed coding
       await new Promise(res => setTimeout(res, 500));
       await this.nextGeneration();
       this.reset();
@@ -154,9 +145,6 @@ export default class Manager {
   // we'll copy that snake -> mutate it a bit
   // -> set that brain to new snake
 
-  // should we get nth power percentage?
-  // the
-
   // fitness means the total "heavy lifting" the specific snake did based on the total amount of points that we're scored in this generation.
   // we calculate the offset (the lowest snake score out of all the generation)
   // we get all of the points
@@ -193,16 +181,13 @@ export default class Manager {
 
   createCanvas = () => {
     const canvas = document.createElement("canvas");
-    // div.setAttribute("id", "canvas-container");
+
     canvas.setAttribute("class", "canvas");
     canvas.setAttribute("width", Manager.state.displaySize as any);
     canvas.setAttribute("height", Manager.state.displaySize as any);
-    // so we can use key presses
     canvas.setAttribute("tabindex", 1 as any);
 
-    // document.body.appendChild(canvas);
     this.container.appendChild(canvas);
-    // this.container = canvas;
 
     return canvas;
   };

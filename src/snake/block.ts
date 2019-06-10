@@ -1,5 +1,4 @@
 import Vector, { iVector } from "./vector";
-import { iEntity } from "../interfaces";
 import Manager from "../manager";
 
 export default class Block {

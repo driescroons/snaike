@@ -117,7 +117,6 @@ export default class Snake {
     }
 
     if (this.status === Status.playing) {
-      // this.think();
       this.think();
 
       // check if we're not dead on next step^
@@ -126,20 +125,14 @@ export default class Snake {
       if (this.collisionCheck(next) || this.ttl <= 0) {
         this.status = Status.dying;
         return;
-        // console.log("DYING", this.ttl > 0 ? "stupid" : "starved");
-        // return this.update();
-        //return setTimeout(this.update, 100);
-        // return this.update();
       }
 
-      // TODO only give points if actually closer to food then previous time...
+      // TODO: only give points if actually closer to food then previous time...
       if (Math.abs(this.distance(this.food.x, this.food.y, next.x, next.y)) < Math.abs(this.distance(this.food.x, this.food.y, this.body[0].position.x, this.body[0].position.y))) {
-        // console.log("getting closer");
         this.addScore(1.5);
       } else {
         this.addScore(-0.5);
       }
-      //
 
       // loop from last block to second block of the body
       // copy i - 1 to i so that every block gets the "next" position
@@ -159,11 +152,6 @@ export default class Snake {
       }
 
       this.ttl--;
-
-      // this.think();
-
-      // await new Promise(res => setTimeout(res, Manager.state.lengthOfTick));
-      // return this.update();
     }
 
     // just check in playing if we're dead. this is a bit useless go go out of above if to just get in here,
@@ -173,7 +161,7 @@ export default class Snake {
         block.color = "salmon";
         block.opacity = 1;
       });
-      // await new Promise(res => setTimeout(res, Manager.state.lengthOfTick * 5));
+
       // we could pass snake instance
       this.status = Status.dead;
     }
@@ -183,9 +171,6 @@ export default class Snake {
         this.manager.died();
         this.died = true;
       }
-
-      // this.reset();
-      // return this.update();
     }
   }
 
@@ -211,8 +196,6 @@ export default class Snake {
       inputs.push(Number(next.equals(this.food)));
 
       let foundFood = false;
-      // for (let j = 0; j < Manager.state.gridSize && !foundFood; j++) {
-      // console.log(this.body[0].position, j);
       const line = this.body[0].position.clone();
       const distance = this.distance(line.x, line.y, this.food.x, this.food.y);
       line.add(new Vector(direction).multiply(distance));
@@ -224,22 +207,11 @@ export default class Snake {
       if (!foundFood) inputs.push(Number(foundFood));
     }
 
-    // optional input -> for big snakes, we could input if there is a clear way ahead (not blocked off) to the food
-
-    // other approach:
-    // in every direction, distance to food & distance to collision
-    // add relative angle as well?
-
-    // console.log(inputs);
-
     let deltaX = this.body[0].position.x - this.food.x;
     let deltaY = this.body[0].position.y - this.food.y;
 
     inputs.push(Math.round(((Math.atan2(deltaY, deltaX) * 180) / 3.14 / 180) * 100) / 100);
     this.direction = this.brain.predict(inputs);
-
-    // push to our history
-    // this.history.push(inputs);
   }
 
   public eating() {
@@ -256,9 +228,6 @@ export default class Snake {
   }
 
   public reset() {
-    // this.brain.fitModel(this.history);
-    // this.brain.dispose();
-
     this.body = [];
     this.history = [];
     this.direction = Direction.up;
@@ -269,8 +238,6 @@ export default class Snake {
     this.ttl = Manager.state.timeForSnakeToLive;
     this.spawnFood();
     this.addBlockToSnake();
-
-    // this.update();
   }
 
   public render() {
