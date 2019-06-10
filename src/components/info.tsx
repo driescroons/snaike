@@ -64,6 +64,12 @@ export default class Info extends React.Component<{}, { open: boolean }> {
             </a>
             .
           </p>
+          <p>
+            Your computer to slow to actually get results? Checkout the video here!{" "}
+            <a target="_blank" href={" https://www.youtube.com/watch?v=kBjSyOzhUYk"}>
+              https://www.youtube.com/watch?v=kBjSyOzhUYk
+            </a>{" "}
+          </p>
         </div>
         <div onClick={() => this.close()} className={"introClose"}>
           ❌
