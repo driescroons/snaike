@@ -1,12 +1,12 @@
 import Snake from "./snake";
-import * as constants from "./constants";
+import * as notify from "pling";
 import { Status } from "./snake/snake";
+import { State } from "./index";
 
 export default class Manager {
   public snakes: Snake[] = [];
 
   public alive = 0;
-  public amount = 100;
 
   public highscore = 0;
   public longest = 1;
@@ -15,19 +15,36 @@ export default class Manager {
 
   public container: HTMLDivElement;
 
-  constructor(opts: { container: HTMLDivElement } = { container: undefined }) {
-    this.init();
+  public static state: State = {
+    populationSize: 100,
+    mutationRate: 0.1,
+    timeForSnakeToLive: 30,
+    moveTowardsScore: 1.5,
+    moveAwayFromScore: -0.5,
+    eatFoodScore: 30,
+    gridSize: 20,
+    displaySize: 100,
+    lengthOfTick: 1
+  };
+
+  constructor(opts: { container: HTMLDivElement; state: State } = { container: undefined, state: undefined }) {
     if (opts.container) {
       this.container = opts.container;
     } else {
       this.createContainer();
     }
+
+    if (opts.state) {
+      Manager.state = opts.state;
+    }
+
+    this.init();
   }
 
   update = async () => {
     if (this.alive > 0) {
       this.snakes.map(snake => snake.update());
-      await new Promise(res => setTimeout(res, constants.TICK));
+      await new Promise(res => setTimeout(res, Manager.state.lengthOfTick));
       this.update();
     }
   };
@@ -41,20 +58,23 @@ export default class Manager {
       // snake.dispose();
       snake.reset();
     });
-    this.alive = this.amount;
+    this.alive = Manager.state.populationSize;
     this.update();
   };
 
   init = () => {
-    // TODO clear the parent container on init call
-    this.createContainer();
+    // TODO: clear the parent container on init call
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
+    // this.createContainer();
     // document.body.onkeydown = e => {
     //   this.controls(e);
     // };
 
     // pass a container in an object to constructor of Snake if you have 1
     // container: document.getElementById("canvas-container") as HTMLCanvasElement
-    [...Array(this.amount)].map((_, i) => {
+    [...Array(Manager.state.populationSize)].map((_, i) => {
       //
       const snake = new Snake({ container: this.createCanvas(), manager: this });
       this.snakes.push(snake);
@@ -73,7 +93,7 @@ export default class Manager {
 
       // we need to wait for everyone to be stopped stop..
       await new Promise(res => setTimeout(res, 500));
-      this.nextGeneration();
+      await this.nextGeneration();
       this.reset();
     }
   };
@@ -82,9 +102,14 @@ export default class Manager {
     this.snakes.map(snake => (snake.status = Status.stopped));
   };
 
-  nextGeneration = () => {
+  nextGeneration = async () => {
     this.calculateFitness(this.snakes);
 
+    notify({
+      key: "bf91a89ff7dc64a6d39746d03713b8caec5dd5d0d34830178d9c3a2d8628ad28",
+      title: "Highscore & Generation",
+      description: JSON.stringify({ generation: this.generation, highscore: this.highscore, length: this.longest, setup: Manager.state })
+    });
     console.log(`generation: ${this.generation}`, `highscore: ${this.highscore}`, `length: ${this.longest}`);
 
     this.generation++;
@@ -101,6 +126,10 @@ export default class Manager {
       snake.mutate();
       return snake;
     });
+  };
+
+  stop = () => {
+    this.pause();
   };
 
   pause = () => {
@@ -166,8 +195,8 @@ export default class Manager {
     const canvas = document.createElement("canvas");
     // div.setAttribute("id", "canvas-container");
     canvas.setAttribute("class", "canvas");
-    canvas.setAttribute("width", constants.WORLD_WIDTH as any);
-    canvas.setAttribute("height", constants.WORLD_HEIGHT as any);
+    canvas.setAttribute("width", Manager.state.displaySize as any);
+    canvas.setAttribute("height", Manager.state.displaySize as any);
     // so we can use key presses
     canvas.setAttribute("tabindex", 1 as any);
 

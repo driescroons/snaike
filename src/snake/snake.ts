@@ -1,7 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
 
-import * as constants from "../constants";
-import "../styles/index.scss";
 import Block from "./block";
 import Vector, { iVector } from "./vector";
 import { NeuralNetwork } from "../brain/brain";
@@ -50,8 +48,8 @@ export default class Snake {
   public history = [];
 
   constructor(opts: { container?: HTMLCanvasElement; brain?: NeuralNetwork | tf.Sequential; manager: Manager } = { container: undefined, brain: undefined, manager: undefined }) {
-    this.width = constants.WORLD_WIDTH;
-    this.height = constants.WORLD_WIDTH;
+    this.width = Manager.state.displaySize;
+    this.height = Manager.state.displaySize;
 
     this.container = opts.container;
     this.manager = opts.manager;
@@ -77,7 +75,7 @@ export default class Snake {
   }
 
   public mutate() {
-    this.brain.mutate(constants.MUTATION_RATE);
+    this.brain.mutate(Manager.state.mutationRate);
   }
 
   public dispose() {
@@ -93,7 +91,7 @@ export default class Snake {
   }
 
   spawnFood() {
-    this.food = new Vector({ x: Math.floor(Math.random() * constants.COLUMNS), y: Math.floor(Math.random() * constants.ROWS) });
+    this.food = new Vector({ x: Math.floor(Math.random() * Manager.state.gridSize), y: Math.floor(Math.random() * Manager.state.gridSize) });
     // check if food is equal to snake of body
     // if so -> recall this method UNTIL we find valid food spot.
     if (this.body.some(block => block.position.equals(this.food))) {
@@ -102,7 +100,7 @@ export default class Snake {
   }
 
   public collisionCheck(position: iVector) {
-    return position.x < 0 || position.x > constants.COLUMNS - 1 || position.y < 0 || position.y > constants.ROWS - 1 || this.body.some(block => block.position.equals(position));
+    return position.x < 0 || position.x > Manager.state.gridSize - 1 || position.y < 0 || position.y > Manager.state.gridSize - 1 || this.body.some(block => block.position.equals(position));
   }
 
   public async update() {
@@ -115,7 +113,7 @@ export default class Snake {
     }
 
     if (this.status === Status.paused) {
-      console.log("PAUSED");
+      console.log("paused");
     }
 
     if (this.status === Status.playing) {
@@ -164,7 +162,7 @@ export default class Snake {
 
       // this.think();
 
-      // await new Promise(res => setTimeout(res, constants.TICK));
+      // await new Promise(res => setTimeout(res, Manager.state.lengthOfTick));
       // return this.update();
     }
 
@@ -175,7 +173,7 @@ export default class Snake {
         block.color = "salmon";
         block.opacity = 1;
       });
-      // await new Promise(res => setTimeout(res, constants.TICK * 5));
+      // await new Promise(res => setTimeout(res, Manager.state.lengthOfTick * 5));
       // we could pass snake instance
       this.status = Status.dead;
     }
@@ -213,7 +211,7 @@ export default class Snake {
       inputs.push(Number(next.equals(this.food)));
 
       let foundFood = false;
-      // for (let j = 0; j < constants.ROWS && !foundFood; j++) {
+      // for (let j = 0; j < Manager.state.gridSize && !foundFood; j++) {
       // console.log(this.body[0].position, j);
       const line = this.body[0].position.clone();
       const distance = this.distance(line.x, line.y, this.food.x, this.food.y);
@@ -245,7 +243,7 @@ export default class Snake {
   }
 
   public eating() {
-    this.ttl += constants.TTL;
+    this.ttl += Manager.state.timeForSnakeToLive;
     this.addScore(30);
     this.addBlockToSnake();
     this.spawnFood();
@@ -268,7 +266,7 @@ export default class Snake {
     this.status = Status.playing;
     this.stopped = false;
     this.died = false;
-    this.ttl = constants.TTL;
+    this.ttl = Manager.state.timeForSnakeToLive;
     this.spawnFood();
     this.addBlockToSnake();
 
@@ -276,13 +274,19 @@ export default class Snake {
   }
 
   public render() {
-    this.context.clearRect(0, 0, constants.WORLD_WIDTH, constants.WORLD_HEIGHT);
+    this.context.clearRect(0, 0, Manager.state.displaySize, Manager.state.displaySize);
     this.context.fillStyle = "white";
-    this.context.fillRect(0, 0, constants.WORLD_WIDTH, constants.WORLD_HEIGHT);
+    this.context.fillRect(0, 0, Manager.state.displaySize, Manager.state.displaySize);
 
     this.context.fillStyle = "lightgreen";
     this.context.beginPath();
-    this.context.arc(this.food.x * constants.TILE_WIDTH + constants.TILE_WIDTH / 2, this.food.y * constants.TILE_HEIGHT + constants.TILE_HEIGHT / 2, (constants.TILE_WIDTH / 2) * 0.8, 0, Math.PI * 2);
+    this.context.arc(
+      (this.food.x * Manager.state.displaySize) / Manager.state.gridSize + Manager.state.displaySize / Manager.state.gridSize / 2,
+      (this.food.y * Manager.state.displaySize) / Manager.state.gridSize + Manager.state.displaySize / Manager.state.gridSize / 2,
+      (Manager.state.displaySize / Manager.state.gridSize / 2) * 0.8,
+      0,
+      Math.PI * 2
+    );
     this.context.fill();
 
     this.body.forEach(block => {
@@ -296,7 +300,7 @@ export default class Snake {
   }
 
   public addBlockToSnake() {
-    let block: Block = new Block({ x: Math.ceil(constants.COLUMNS / 2), y: Math.ceil(constants.ROWS / 2) });
+    let block: Block = new Block({ x: Math.ceil(Manager.state.gridSize / 2), y: Math.ceil(Manager.state.gridSize / 2) });
     if (this.body.length > 0) {
       // we could just only reserve them for 1 spot, but since we're able to dynamically add them
       // to the snake, we get reserved of last block and add 1
@@ -312,7 +316,6 @@ export default class Snake {
 
   public controls(e: KeyboardEvent) {
     // TODO: only if keyboard enabled
-    console.log(e.which, this.direction);
     switch (e.which) {
       case 37: {
         this.direction = Direction.left;
@@ -339,7 +342,6 @@ export default class Snake {
       case 32: {
         if (this.status === Status.playing) {
           this.status = Status.paused;
-          console.log("paused");
         }
         break;
       }

@@ -1,11 +1,11 @@
-import * as constants from "../constants";
 import Vector, { iVector } from "./vector";
 import { iEntity } from "../interfaces";
+import Manager from "../manager";
 
 export default class Block {
   public position: Vector;
-  public width: number = constants.TILE_WIDTH;
-  public height: number = constants.TILE_HEIGHT;
+  public width: number = Manager.state.displaySize / Manager.state.gridSize;
+  public height: number = Manager.state.displaySize / Manager.state.gridSize;
 
   public reserved: number;
 
@@ -22,6 +22,11 @@ export default class Block {
   render(context: CanvasRenderingContext2D, died: boolean) {
     !died ? (context.fillStyle = this.color) : (context.fillStyle = "lightgrey");
     context.globalAlpha = this.opacity;
-    context.fillRect(this.position.x * constants.TILE_WIDTH, this.position.y * constants.TILE_HEIGHT, constants.TILE_WIDTH, constants.TILE_HEIGHT);
+    context.fillRect(
+      (this.position.x * Manager.state.displaySize) / Manager.state.gridSize,
+      (this.position.y * Manager.state.displaySize) / Manager.state.gridSize,
+      Manager.state.displaySize / Manager.state.gridSize,
+      Manager.state.displaySize / Manager.state.gridSize
+    );
   }
 }
