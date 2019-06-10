@@ -33,7 +33,7 @@ module.exports = (env, argv) => {
       ]
     },
     optimization: {
-      minimizer: [new UglifyJSPlugin({ sourceMap: true, extractComments: true })]
+      // minimizer: [new UglifyJSPlugin({ sourceMap: true, extractComments: true })]
     },
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
