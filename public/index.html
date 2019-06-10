@@ -29,7 +29,8 @@
     <meta property="og:description" content="A browser trained snake neural network" />
     <meta property="og:image:width" content="500" />
     <meta property="og:image:height" content="500" />
-    <meta property="og:image" content="<%= require('./thumbnail.png') %>" />
+    <!-- <meta property="og:image" content="<%= htmlWebpackPlugin.options.thumbnail %>" /> -->
+    <meta property="og:image" content="/<%=require('./thumbnail.png')%>" />
 
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>

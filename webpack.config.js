@@ -53,7 +53,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new CleanWebpackPlugin({ verbose: true }),
-      new HtmlWebpackPlugin({ title: "Snaike", favicon: path.join("public", "snake.png"), thumbnail: path.join("public", "thumbnail.png"), template: path.join("public", "index.html") }),
+      new HtmlWebpackPlugin({ title: "Snaike", favicon: path.join("public", "snake.png"), template: path.join("public", "index.html") }),
       new MiniCssExtractPlugin({
         filename: path.join("css", `[name].[hash].css`),
         chunkFilename: path.join("css", `[id].[hash].css`)
