@@ -192,8 +192,8 @@ export default class Snake {
   }
 
   public distance(x1, y1, x2, y2) {
-    var xs = x2 - x1,
-      ys = y2 - y1;
+    let xs = x2 - x1;
+    let ys = y2 - y1;
 
     xs *= xs;
     ys *= ys;
@@ -236,9 +236,6 @@ export default class Snake {
 
     let deltaX = this.body[0].position.x - this.food.x;
     let deltaY = this.body[0].position.y - this.food.y;
-
-    // atan2(vector1.y - vector2.y, vector1.x - vector2.x)
-    // console.log(Math.atan2(deltaY, deltaX) / Math.PI);
 
     inputs.push(Math.round(((Math.atan2(deltaY, deltaX) * 180) / 3.14 / 180) * 100) / 100);
     this.direction = this.brain.predict(inputs);

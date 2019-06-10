@@ -9,11 +9,19 @@ export default class Manager {
   public amount = 100;
 
   public highscore = 0;
+  public longest = 1;
 
   public generation = 0;
 
-  constructor() {
+  public container: HTMLDivElement;
+
+  constructor(opts: { container: HTMLDivElement } = { container: undefined }) {
     this.init();
+    if (opts.container) {
+      this.container = opts.container;
+    } else {
+      this.createContainer();
+    }
   }
 
   update = async () => {
@@ -38,6 +46,8 @@ export default class Manager {
   };
 
   init = () => {
+    // TODO clear the parent container on init call
+    this.createContainer();
     // document.body.onkeydown = e => {
     //   this.controls(e);
     // };
@@ -46,7 +56,7 @@ export default class Manager {
     // container: document.getElementById("canvas-container") as HTMLCanvasElement
     [...Array(this.amount)].map((_, i) => {
       //
-      const snake = new Snake({ container: createContainer(), manager: this });
+      const snake = new Snake({ container: this.createCanvas(), manager: this });
       this.snakes.push(snake);
     });
     this.reset();
@@ -75,7 +85,7 @@ export default class Manager {
   nextGeneration = () => {
     this.calculateFitness(this.snakes);
 
-    console.log(`generation: ${this.generation}`, `highscore: ${this.highscore}`);
+    console.log(`generation: ${this.generation}`, `highscore: ${this.highscore}`, `length: ${this.longest}`);
 
     this.generation++;
     this.snakes.map(snake => {
@@ -126,6 +136,7 @@ export default class Manager {
     let offset = snakes.reduce((acc, snake) => {
       if (snake.score > this.highscore) {
         this.highscore = snake.score;
+        this.longest = snake.body.length;
       }
       if (snake.score < acc) {
         return snake.score;
@@ -140,19 +151,30 @@ export default class Manager {
       snake.fitness = (snake.score + offset) / sum;
     });
   };
+
+  createContainer = () => {
+    const div = document.createElement("div");
+    div.setAttribute("class", "snakes");
+
+    document.body.appendChild(div);
+    this.container = div;
+
+    return div;
+  };
+
+  createCanvas = () => {
+    const canvas = document.createElement("canvas");
+    // div.setAttribute("id", "canvas-container");
+    canvas.setAttribute("class", "canvas");
+    canvas.setAttribute("width", constants.WORLD_WIDTH as any);
+    canvas.setAttribute("height", constants.WORLD_HEIGHT as any);
+    // so we can use key presses
+    canvas.setAttribute("tabindex", 1 as any);
+
+    // document.body.appendChild(canvas);
+    this.container.appendChild(canvas);
+    // this.container = canvas;
+
+    return canvas;
+  };
 }
-
-const createContainer = () => {
-  const canvas = document.createElement("canvas");
-  // div.setAttribute("id", "canvas-container");
-  canvas.setAttribute("class", "canvas");
-  canvas.setAttribute("width", constants.WORLD_WIDTH as any);
-  canvas.setAttribute("height", constants.WORLD_HEIGHT as any);
-  // so we can use key presses
-  canvas.setAttribute("tabindex", 1 as any);
-
-  document.body.appendChild(canvas);
-  this.container = canvas;
-
-  return canvas;
-};
