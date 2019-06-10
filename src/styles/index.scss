@@ -81,10 +81,17 @@ body {
   padding: 10px;
   background: $highlight;
   color: white;
-  position: absolute;
-  top: 0;
-  right: 0;
+  text-align: center;
 }
+
+@media (min-width: 500px) {
+  .open {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
 @media (min-width: 500px) {
   .main,
   .sidebar {
