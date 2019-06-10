@@ -25,6 +25,13 @@
     "webpack-dev-server": "^3.4.1"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^1.1.2"
+    "@tensorflow/tfjs": "^1.1.2",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
+    "formik": "^1.5.7",
+    "pling": "^1.0.0-rc.6",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "yup": "^0.27.0"
   }
 }
