@@ -11,6 +11,15 @@ body {
 #root {
   height: 100%;
   display: flex;
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: #ddd;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #aaa;
+  }
 }
 
 body {
@@ -157,6 +166,7 @@ body {
     }
 
     button {
+      font-weight: 600;
       outline: 0;
       border: none;
       text-align: center;
