@@ -28,6 +28,7 @@
     "@tensorflow/tfjs": "^1.1.2",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
+    "file-loader": "^4.0.0",
     "formik": "^1.5.7",
     "pling": "^1.0.0-rc.6",
     "react": "^16.8.6",
