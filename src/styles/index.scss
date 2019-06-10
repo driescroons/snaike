@@ -86,6 +86,15 @@ body {
     cursor: pointer;
     padding: 10px;
   }
+
+  @media (max-width: 500px) {
+    &Close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      // padding: 10;
+    }
+  }
 }
 
 .open {
@@ -122,8 +131,11 @@ body {
 }
 
 .snakes {
-  padding-top: 5px;
+  padding-top: 2px;
   padding-left: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .app {
@@ -210,7 +222,7 @@ body {
 
 canvas {
   border: 2px solid $grey;
-  margin-top: -5px;
+  margin-top: -2px;
   margin-left: -2px;
   &:focus {
     outline: none;
