@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs"
+    "module": "commonjs",
+    "sourceMap": true,
+    "jsx": "react"
   },
   "exclude": ["node_modules", "lib"],
   "compileOnSave": true,
