@@ -7,10 +7,6 @@ import "./styles/index.scss";
 import Manager from "./manager";
 import Info from "./components/info";
 
-const div = document.createElement("div");
-div.setAttribute("class", "root");
-document.body.appendChild(div);
-
 export interface State {
   populationSize: number;
   mutationRate: number;
@@ -129,4 +125,8 @@ export default class App extends React.Component<{}, State> {
   }
 }
 
-ReactDOM.render(<App />, div);
+// const div = document.createElement("div");
+// div.setAttribute("class", "root");
+// document.body.appendChild(div);
+
+ReactDOM.render(<App />, document.getElementById("root"));
