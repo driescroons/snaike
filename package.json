@@ -6,9 +6,18 @@
     "build": "webpack --config webpack.config.js --progress --mode production",
     "dev": "webpack-dev-server --config webpack.config.js --mode development --open"
   },
-  "author": "Dries Croons",
-  "description": "Random idea about making a snake game that learns to play itself",
+  "license": "MIT",
+  "author": {
+    "name": "Dries Croons",
+    "email": "driescroons@gmail.com",
+    "url": "https://dries.io"
+  },
+  "description": "Snaike is a browser trained snake neural network",
   "devDependencies": {
+    "@tensorflow/tfjs": "^1.1.2",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
+    "file-loader": "^4.0.0",
     "clean-webpack-plugin": "^2.0.2",
     "css-loader": "^2.1.1",
     "html-webpack-plugin": "^3.2.0",
@@ -25,10 +34,6 @@
     "webpack-dev-server": "^3.4.1"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^1.1.2",
-    "@types/react": "^16.8.19",
-    "@types/react-dom": "^16.8.4",
-    "file-loader": "^4.0.0",
     "formik": "^1.5.7",
     "pling": "^1.0.0-rc.6",
     "react": "^16.8.6",
