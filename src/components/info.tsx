@@ -24,7 +24,7 @@ export default class Info extends React.Component<{}, { open: boolean }> {
             <span className={"hi"}>✋</span>Hi, you came to try out Snaike?
           </h2>
           <p>
-            Snaike is a small implementation of a neural network that learns to play snake over multiple generations. I hacked something together over the weekend and figured I'd post it online! It's
+            Snaike is a browser trained snake neural network that learns to play, you couldn't have guessed it, snake. I hacked something together over the weekend and figured I'd post it online! It's
             made using{" "}
             <a target="_blank" href={"https://www.typescriptlang.org/"}>
               Typescript
@@ -49,8 +49,12 @@ export default class Info extends React.Component<{}, { open: boolean }> {
             <a target="_blank" href={"https://github.com/driescroons/snaike"}>
               Snaike Repository
             </a>{" "}
-            as I'm looking elaborate (and maybe even write a full tutorial for this). Are you looking for a side project or would you just like to have a look at the code? Please checkout our github
-            page with all references and a more elaborate explanation.
+            as I'm looking to elaborate on this (and maybe even write a full tutorial for this). Are you looking for a side project and want to help me out? Or would you just like to have a look at
+            the code? You'll be able to find a more{" "}
+            <a target="_blank" href={"https://github.com/driescroons/snaike"}>
+              a elaborate explanation and links to to everyone who made this project possible
+            </a>{" "}
+            👀
           </p>
 
           <p>
