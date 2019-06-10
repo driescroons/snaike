@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
   return {
     context: __dirname,
-    entry: path.join(__dirname, "src", "index.ts"),
+    entry: path.join(__dirname, "src", "index.tsx"),
     devtool: isProduction ? "source-map" : "cheap-source-map",
     module: {
       rules: [
