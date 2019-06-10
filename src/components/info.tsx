@@ -56,7 +56,10 @@ export default class Info extends React.Component<{}, { open: boolean }> {
             </a>{" "}
             👀
           </p>
-
+          <p>
+            For nicer results, leave your browser tab open for half. The neural network needs to get some generations worth of data in order to achieve better results. If you're experiencing lag, try
+            reducing the population size and display size below.
+          </p>
           <p>
             You can reach me{" "}
             <a target="_blank" href={"https://twitter.com/croewens"}>
