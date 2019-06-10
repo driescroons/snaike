@@ -14,7 +14,8 @@ export class Direction {
   public static left: iVector = new Vector({ x: -1, y: 0 });
 }
 
-export const directions: iVector[] = [Direction.up, Direction.right, Direction.right, Direction.down];
+// css style
+export const directions: iVector[] = [Direction.up, Direction.right, Direction.down, Direction.left];
 
 export class Status {
   public static playing: string = "STATUS_PLAYING";
@@ -118,26 +119,29 @@ export default class Snake {
     }
 
     if (this.status === Status.playing) {
+      // this.think();
       this.think();
 
       // check if we're not dead on next step^
       const next = this.body[0].position.clone().add(this.direction);
+
       if (this.collisionCheck(next) || this.ttl <= 0) {
         this.status = Status.dying;
+        return;
         // console.log("DYING", this.ttl > 0 ? "stupid" : "starved");
-        return this.update();
+        // return this.update();
         //return setTimeout(this.update, 100);
         // return this.update();
       }
 
+      // TODO only give points if actually closer to food then previous time...
       if (Math.abs(this.distance(this.food.x, this.food.y, next.x, next.y)) < Math.abs(this.distance(this.food.x, this.food.y, this.body[0].position.x, this.body[0].position.y))) {
+        // console.log("getting closer");
         this.addScore(1.5);
       } else {
         this.addScore(-0.5);
       }
-      // } else {
-      //   this.addScore(-1);
-      // }
+      //
 
       // loop from last block to second block of the body
       // copy i - 1 to i so that every block gets the "next" position
@@ -158,8 +162,10 @@ export default class Snake {
 
       this.ttl--;
 
-      await new Promise(res => setTimeout(res, constants.TICK));
-      return this.update();
+      // this.think();
+
+      // await new Promise(res => setTimeout(res, constants.TICK));
+      // return this.update();
     }
 
     // just check in playing if we're dead. this is a bit useless go go out of above if to just get in here,
@@ -169,7 +175,7 @@ export default class Snake {
         block.color = "salmon";
         block.opacity = 1;
       });
-      await new Promise(res => setTimeout(res, constants.TICK * 5));
+      // await new Promise(res => setTimeout(res, constants.TICK * 5));
       // we could pass snake instance
       this.status = Status.dead;
     }
@@ -207,25 +213,34 @@ export default class Snake {
       inputs.push(Number(next.equals(this.food)));
 
       let foundFood = false;
-      for (let j = 0; j < constants.WORLD_WIDTH && !foundFood; j++) {
-        if (next.equals(this.food)) {
-          inputs.push(Number(true));
-          foundFood = true;
-        }
+      // for (let j = 0; j < constants.ROWS && !foundFood; j++) {
+      // console.log(this.body[0].position, j);
+      const line = this.body[0].position.clone();
+      const distance = this.distance(line.x, line.y, this.food.x, this.food.y);
+      line.add(new Vector(direction).multiply(distance));
+      if (line.equals(this.food)) {
+        inputs.push(Number(true));
+        foundFood = true;
       }
+      // }
       if (!foundFood) inputs.push(Number(foundFood));
     }
 
     // optional input -> for big snakes, we could input if there is a clear way ahead (not blocked off) to the food
+
+    // other approach:
+    // in every direction, distance to food & distance to collision
+    // add relative angle as well?
+
     // console.log(inputs);
 
     let deltaX = this.body[0].position.x - this.food.x;
     let deltaY = this.body[0].position.y - this.food.y;
 
-    // console.log();
+    // atan2(vector1.y - vector2.y, vector1.x - vector2.x)
+    // console.log(Math.atan2(deltaY, deltaX) / Math.PI);
 
     inputs.push(Math.round(((Math.atan2(deltaY, deltaX) * 180) / 3.14 / 180) * 100) / 100);
-
     this.direction = this.brain.predict(inputs);
 
     // push to our history
@@ -234,7 +249,7 @@ export default class Snake {
 
   public eating() {
     this.ttl += constants.TTL;
-    this.addScore(15);
+    this.addScore(30);
     this.addBlockToSnake();
     this.spawnFood();
   }
@@ -260,7 +275,7 @@ export default class Snake {
     this.spawnFood();
     this.addBlockToSnake();
 
-    this.update();
+    // this.update();
   }
 
   public render() {
@@ -299,29 +314,29 @@ export default class Snake {
   }
 
   public controls(e: KeyboardEvent) {
+    // TODO: only if keyboard enabled
+    console.log(e.which, this.direction);
     switch (e.which) {
       case 37: {
-        if (this.direction !== Direction.right) {
-          this.direction = Direction.left;
-        }
+        this.direction = Direction.left;
+        this.update();
+
         break;
       }
       case 38: {
-        if (this.direction !== Direction.down) {
-          this.direction = Direction.up;
-        }
+        this.direction = Direction.up;
+        this.update();
+
         break;
       }
       case 39: {
-        if (this.direction !== Direction.left) {
-          this.direction = Direction.right;
-        }
+        this.direction = Direction.right;
+        this.update();
         break;
       }
       case 40: {
-        if (this.direction !== Direction.up) {
-          this.direction = Direction.down;
-        }
+        this.direction = Direction.down;
+        this.update();
         break;
       }
       case 32: {

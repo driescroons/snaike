@@ -16,22 +16,36 @@ export default class Manager {
     this.init();
   }
 
+  update = async () => {
+    if (this.alive > 0) {
+      this.snakes.map(snake => snake.update());
+      await new Promise(res => setTimeout(res, constants.TICK));
+      this.update();
+    }
+  };
+
   reset = () => {
     // REUSE containers from dom?
     // reset snakes
     // use new improved brains
 
+    this.snakes.forEach(snake => {
+      // snake.dispose();
+      snake.reset();
+    });
     this.alive = this.amount;
+    this.update();
   };
 
   init = () => {
-    document.body.onkeydown = e => {
-      this.controls(e);
-    };
+    // document.body.onkeydown = e => {
+    //   this.controls(e);
+    // };
 
     // pass a container in an object to constructor of Snake if you have 1
     // container: document.getElementById("canvas-container") as HTMLCanvasElement
     [...Array(this.amount)].map((_, i) => {
+      //
       const snake = new Snake({ container: createContainer(), manager: this });
       this.snakes.push(snake);
     });
@@ -48,9 +62,9 @@ export default class Manager {
       this.stopSnakes();
 
       // we need to wait for everyone to be stopped stop..
-      await new Promise(res => setTimeout(res, 5000));
-      this.reset();
+      await new Promise(res => setTimeout(res, 500));
       this.nextGeneration();
+      this.reset();
     }
   };
 
@@ -59,8 +73,11 @@ export default class Manager {
   };
 
   nextGeneration = () => {
-    this.generation++;
     this.calculateFitness(this.snakes);
+
+    console.log(`generation: ${this.generation}`, `highscore: ${this.highscore}`);
+
+    this.generation++;
     this.snakes.map(snake => {
       let index = 0;
       let r = Math.random();
@@ -74,11 +91,6 @@ export default class Manager {
       snake.mutate();
       return snake;
     });
-    this.snakes.forEach(snake => {
-      // snake.dispose();
-      snake.reset();
-    });
-    console.log("NEXT GENERATION", `highscore: ${this.highscore}`, `generation: ${this.generation}`);
   };
 
   pause = () => {
@@ -90,7 +102,6 @@ export default class Manager {
     switch (e.which) {
       case 32: {
         this.pause();
-        this.snakes.map(snake => console.log(snake));
         break;
       }
     }

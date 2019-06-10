@@ -9,6 +9,6 @@ export const TILE_HEIGHT = WORLD_HEIGHT / ROWS;
 
 export const TICK = 1;
 
-export const TTL = 50;
+export const TTL = 30;
 
-export const MUTATION_RATE = 0.3;
+export const MUTATION_RATE = 0.1;
