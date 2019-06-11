@@ -52,6 +52,7 @@ I've scrolled through many projects during the creation and I most definitely wo
 - https://github.com/Llang8/snake-ai
 - https://towardsdatascience.com/train-ai-to-play-snake-in-your-browser-ca657097d707
 - https://github.com/ldcorentin/Snake-AI
+- https://github.com/greerviau/SnakeAI
 - https://www.youtube.com/watch?v=zIkBYwdkuTk
 - https://github.com/Lund259/Neural-Network-Plays-Snake/
 - https://github.com/Acidic9/snake-ai
