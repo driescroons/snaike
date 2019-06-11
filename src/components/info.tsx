@@ -20,9 +20,14 @@ export default class Info extends React.Component<{}, { open: boolean }> {
     return this.state.open ? (
       <div className={"intro"}>
         <div className={"introContent"}>
-          <h2>
-            <span className={"hi"}>✋</span>Hi, you came to try out Snaike?
-          </h2>
+          <div className={"introContentWrapper"}>
+            <h2>
+              <span className={"hi"}>✋</span>Hi, you came to try out Snaike?
+            </h2>
+            <div onClick={() => this.close()} className={"introClose"}>
+              ❌
+            </div>
+          </div>
           <p>
             Snaike is a browser trained snake neural network that learns to play, you couldn't have guessed it, snake. I hacked something together over the weekend and figured I'd post it online! It's
             made using{" "}
@@ -77,9 +82,6 @@ export default class Info extends React.Component<{}, { open: boolean }> {
               https://www.youtube.com/watch?v=kBjSyOzhUYk
             </a>{" "}
           </p>
-        </div>
-        <div onClick={() => this.close()} className={"introClose"}>
-          ❌
         </div>
       </div>
     ) : (
