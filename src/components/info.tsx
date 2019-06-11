@@ -4,7 +4,7 @@ export default class Info extends React.Component<{}, { open: boolean }> {
   constructor(props) {
     super(props);
     this.state = {
-      open: true
+      open: false
     };
   }
 
@@ -57,8 +57,8 @@ export default class Info extends React.Component<{}, { open: boolean }> {
             👀
           </p>
           <p>
-            For nicer results, leave your browser tab open for half. The neural network needs to get some generations worth of data in order to achieve better results. If you're experiencing lag, try
-            reducing the population size and display size below.
+            For nicer results, leave your browser tab open for half an hour. The neural network needs to get some generations worth of data in order to achieve better results. If you're experiencing
+            lag, try reducing the population size and display size below.
           </p>
           <p>
             You can reach me{" "}
