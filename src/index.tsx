@@ -6,6 +6,7 @@ import { Formik, FormikActions, FormikProps, Form, Field, FieldProps } from "for
 import "./styles/index.scss";
 import Manager from "./manager";
 import Info from "./components/info";
+import Help from "./components/help";
 
 export interface State {
   populationSize: number;
@@ -118,6 +119,7 @@ export default class App extends React.Component<{}, State> {
             </div>
           </div>
         </div>
+        <Help />
       </div>
     );
   }

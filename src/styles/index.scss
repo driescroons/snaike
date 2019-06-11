@@ -107,6 +107,66 @@ body {
   text-align: center;
 }
 
+.help {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  font-weight: 600;
+  line-height: 1.4em;
+  cursor: pointer;
+
+  background: $grey;
+  color: white;
+
+  &Open {
+    padding: 10px;
+    background: $grey;
+    color: black;
+  }
+
+  &Content {
+    width: 300px;
+    &Wrapper {
+      background: black;
+      // padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 10px;
+
+      h2 {
+        margin: 5px 0;
+      }
+    }
+
+    p {
+      color: black;
+      padding: 10px;
+      margin: 5px 0;
+      // padding: 10px;
+    }
+  }
+
+  &Close {
+    // padding: 0 10px;
+  }
+}
+
+.video {
+  padding: 0 10px 10px 10px;
+  object-fit: cover;
+  display: flex;
+  justify-content: center;
+
+  video {
+    width: 100%;
+  }
+}
+
+.closeHelp {
+}
+
 @media (min-width: 500px) {
   .open {
     position: absolute;
