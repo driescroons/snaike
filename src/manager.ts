@@ -15,6 +15,8 @@ export default class Manager {
 
   public container: HTMLDivElement;
 
+  public canvases: HTMLCanvasElement[];
+
   public static state: State = {
     populationSize: 100,
     mutationRate: 0.1,
@@ -27,12 +29,14 @@ export default class Manager {
     lengthOfTick: 1
   };
 
-  constructor(opts: { container: HTMLDivElement; state: State } = { container: undefined, state: undefined }) {
-    if (opts.container) {
-      this.container = opts.container;
-    } else {
-      this.createContainer();
-    }
+  constructor(opts: { state: State; canvases: HTMLCanvasElement[] } = { state: undefined, canvases: [] }) {
+    // if (opts.container) {
+    //   this.container = opts.container;
+    // } else {
+    //   this.createContainer();
+    // }
+
+    this.canvases = opts.canvases;
 
     if (opts.state) {
       Manager.state = opts.state;
@@ -59,14 +63,14 @@ export default class Manager {
 
   init = () => {
     // TODO: clear the parent container on init call
-    while (this.container.firstChild) {
-      this.container.removeChild(this.container.firstChild);
-    }
+    // while (this.container.firstChild) {
+    //   this.container.removeChild(this.container.firstChild);
+    // }
 
     // pass a container in an object to constructor of Snake if you have 1
     // container: document.getElementById("canvas-container") as HTMLCanvasElement
-    [...Array(Manager.state.populationSize)].map((_, i) => {
-      const snake = new Snake({ container: this.createCanvas(), manager: this });
+    this.canvases.map(canvas => {
+      const snake = new Snake({ container: canvas, manager: this });
       this.snakes.push(snake);
     });
     this.reset();
@@ -169,26 +173,26 @@ export default class Manager {
     });
   };
 
-  createContainer = () => {
-    const div = document.createElement("div");
-    div.setAttribute("class", "snakes");
+  // createContainer = () => {
+  //   const div = document.createElement("div");
+  //   div.setAttribute("class", "snakes");
 
-    document.body.appendChild(div);
-    this.container = div;
+  //   document.body.appendChild(div);
+  //   this.container = div;
 
-    return div;
-  };
+  //   return div;
+  // };
 
-  createCanvas = () => {
-    const canvas = document.createElement("canvas");
+  // createCanvas = () => {
+  //   const canvas = document.createElement("canvas");
 
-    canvas.setAttribute("class", "canvas");
-    canvas.setAttribute("width", Manager.state.displaySize as any);
-    canvas.setAttribute("height", Manager.state.displaySize as any);
-    canvas.setAttribute("tabindex", 1 as any);
+  //   canvas.setAttribute("class", "canvas");
+  //   canvas.setAttribute("width", Manager.state.displaySize as any);
+  //   canvas.setAttribute("height", Manager.state.displaySize as any);
+  //   canvas.setAttribute("tabindex", 1 as any);
 
-    this.container.appendChild(canvas);
+  //   this.container.appendChild(canvas);
 
-    return canvas;
-  };
+  //   return canvas;
+  // };
 }

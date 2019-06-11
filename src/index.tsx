@@ -24,6 +24,8 @@ export default class App extends React.Component<{}, State> {
   private snakes = React.createRef<HTMLDivElement>();
   public manager: Manager;
 
+  public canvases;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,10 +50,12 @@ export default class App extends React.Component<{}, State> {
   }
 
   componentDidUpdate() {
-    this.manager = new Manager({ container: this.snakes.current, state: this.state });
+    // console.log(this.canvases);
+    this.manager = new Manager({ state: this.state, canvases: this.canvases.map(canvas => canvas.current) });
   }
 
   render() {
+    this.canvases = [...Array(this.state.populationSize)].map((_, i) => React.createRef());
     return (
       <div className={"app"}>
         <Info />
@@ -115,7 +119,12 @@ export default class App extends React.Component<{}, State> {
           </div>
           <div className={"main"}>
             <div className={"mainWrapper"}>
-              <div className={"snakes"} ref={this.snakes} />
+              <div className={"snakes"} ref={this.snakes}>
+                {this.canvases.map(ref => (
+                  <canvas className={"canvas"} width={Manager.state.displaySize} height={Manager.state.displaySize} ref={ref} />
+                ))}
+              </div>{" "}
+              />
             </div>
           </div>
         </div>
