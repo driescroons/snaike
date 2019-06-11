@@ -124,7 +124,6 @@ export default class App extends React.Component<{}, State> {
                   <canvas className={"canvas"} width={Manager.state.displaySize} height={Manager.state.displaySize} ref={ref} />
                 ))}
               </div>{" "}
-              />
             </div>
           </div>
         </div>
