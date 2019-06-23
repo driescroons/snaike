@@ -42,6 +42,7 @@ Once the packages are installed, run
 - Tensorflow
 - HTML5s canvas element
 - React
+- Redux
 
 # References
 

@@ -229,6 +229,11 @@ body {
 
   &Header {
     padding: 0 10px;
+
+    a {
+      text-decoration: none;
+      color: $highlight;
+    }
   }
 
   .statistics {
@@ -241,6 +246,11 @@ body {
     &Header {
       display: flex;
       justify-content: space-between;
+
+      a {
+        text-decoration: none;
+        color: $highlight;
+      }
     }
 
     &List {

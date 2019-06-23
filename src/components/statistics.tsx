@@ -26,9 +26,9 @@ class Statistics extends React.Component<{
 
     shareUrl.searchParams.append(
       "text",
-      `I've ran ${this.props.generation} ${this.props.generation == 1 ? "generation" : "generations"} and the highest scoring snake had a length of ${this.props.longestSnake} and a higshscore of ${
-        this.props.highscore
-      }. You'd like to checkout AI trained snakes in the browser? Click  👉`
+      `I've just ran ${this.props.generation} ${this.props.generation == 1 ? "generation" : "generations"} and the highest scoring snake had a length of ${
+        this.props.longestSnake
+      }. You'd like to checkout AI trained snakes in the browser? Made with Typescript, Tensorflow, React & Redux. Made by @croewens! Click  👉`
     );
 
     shareUrl.searchParams.set("url", "https://snaike.dries.io");
@@ -39,7 +39,7 @@ class Statistics extends React.Component<{
           <div className={"statisticsHeader"}>
             <h2>Statistics</h2>
             <a href={shareUrl.toString()} target="_blank">
-              📤
+              Share me 📤
             </a>
           </div>
           <div className={"statisticsList"}>
