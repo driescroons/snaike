@@ -42,7 +42,7 @@ export default class App extends React.Component<
     super(props);
 
     this.state = {
-      populationSize: 20,
+      populationSize: 50,
       mutationRate: 0.1,
       timeForSnakeToLive: 30,
       moveTowardsScore: 1.5,
