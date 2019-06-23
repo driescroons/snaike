@@ -226,10 +226,38 @@ body {
 .sidebar {
   background: $grey;
   min-width: 300px;
+
+  &Header {
+    padding: 0 10px;
+  }
+
+  .statistics {
+    padding: 0 10px;
+
+    h2 {
+      margin: 5px 0;
+    }
+
+    &Header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &List {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .statistic {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+  }
 }
 
 .form {
-  padding: 10px;
+  padding: 0 10px 10px 10px;
   &Group {
     padding: 5px 0;
     display: flex;

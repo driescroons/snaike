@@ -1,12 +1,17 @@
+import "./styles/index.scss";
+
+import { Field, FieldProps, Form, Formik, FormikActions, FormikProps } from "formik";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { connect, Provider } from "react-redux";
 import * as Yup from "yup";
 
-import { Formik, FormikActions, FormikProps, Form, Field, FieldProps } from "formik";
-import "./styles/index.scss";
-import Manager from "./manager";
-import Info from "./components/info";
+import * as actions from "./actions/statistics";
 import Help from "./components/help";
+import Info from "./components/info";
+import Statistics from "./components/statistics";
+import Manager from "./manager";
+import store from "./store";
 
 export interface State {
   populationSize: number;
@@ -20,7 +25,14 @@ export interface State {
   lengthOfTick: number;
 }
 
-export default class App extends React.Component<{}, State> {
+export default class App extends React.Component<
+  {
+    setStatistics: Function;
+    setStart: Function;
+    clear: Function;
+  },
+  State
+> {
   private snakes = React.createRef<HTMLDivElement>();
   public manager: Manager;
 
@@ -28,8 +40,9 @@ export default class App extends React.Component<{}, State> {
 
   constructor(props) {
     super(props);
+
     this.state = {
-      populationSize: 100,
+      populationSize: 20,
       mutationRate: 0.1,
       timeForSnakeToLive: 30,
       moveTowardsScore: 1.5,
@@ -41,17 +54,18 @@ export default class App extends React.Component<{}, State> {
     };
   }
 
-  static getDerivedStateFromProps = props => {
-    return props;
-  };
-
   componentDidMount() {
     this.forceUpdate();
   }
 
+  updateStatistics = statistics => {
+    this.props.setStatistics(statistics);
+  };
+
   componentDidUpdate() {
     // console.log(this.canvases);
-    this.manager = new Manager({ state: this.state, canvases: this.canvases.map(canvas => canvas.current) });
+    this.props.clear();
+    this.manager = new Manager({ state: this.state, canvases: this.canvases.map(canvas => canvas.current), updateStatistics: this.updateStatistics });
   }
 
   render() {
@@ -61,7 +75,13 @@ export default class App extends React.Component<{}, State> {
         <Info />
         <div className={"content"}>
           <div className={"sidebar"}>
-            {/* <h2>Sidebar</h2> */}
+            <div className={"sidebarHeader"}>
+              <h2>Snaike 🐍</h2>
+              <p>
+                Snaike is a browser trained snake neural network that learns to play snake. Created by <a href={"https://dries.io"}>Dries Croons</a>.
+              </p>
+            </div>
+            <Statistics />
             <Formik
               initialValues={{
                 populationSize: this.state.populationSize,
@@ -133,4 +153,20 @@ export default class App extends React.Component<{}, State> {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const mapDispatchToProps = {
+  setStatistics: actions.setStatistics,
+  setStart: actions.setStart,
+  clear: actions.clear
+};
+
+const Snaike = connect(
+  null,
+  mapDispatchToProps
+)(App);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <Snaike />
+  </Provider>,
+  document.getElementById("root")
+);

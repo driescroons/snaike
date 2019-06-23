@@ -109,11 +109,11 @@ export default class Snake {
 
     if (this.status === Status.stopped) {
       this.stopped = true;
-      console.log("force stopped");
+      // console.log("force stopped");
     }
 
     if (this.status === Status.paused) {
-      console.log("paused");
+      // console.log("paused");
     }
 
     if (this.status === Status.playing) {

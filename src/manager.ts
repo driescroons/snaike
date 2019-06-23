@@ -4,6 +4,18 @@ import { Status } from "./snake/snake";
 import { State } from "./index";
 
 export default class Manager {
+  public static state: State = {
+    populationSize: 100,
+    mutationRate: 0.1,
+    timeForSnakeToLive: 30,
+    moveTowardsScore: 1.5,
+    moveAwayFromScore: -0.5,
+    eatFoodScore: 30,
+    gridSize: 20,
+    displaySize: 100,
+    lengthOfTick: 1
+  };
+
   public snakes: Snake[] = [];
 
   public alive = 0;
@@ -17,19 +29,10 @@ export default class Manager {
 
   public canvases: HTMLCanvasElement[];
 
-  public static state: State = {
-    populationSize: 100,
-    mutationRate: 0.1,
-    timeForSnakeToLive: 30,
-    moveTowardsScore: 1.5,
-    moveAwayFromScore: -0.5,
-    eatFoodScore: 30,
-    gridSize: 20,
-    displaySize: 100,
-    lengthOfTick: 1
-  };
+  public updateStatistics: Function;
 
-  constructor(opts: { state: State; canvases: HTMLCanvasElement[] } = { state: undefined, canvases: [] }) {
+  // tslint:disable-next-line: max-line-length
+  constructor(opts: { state: State; canvases: HTMLCanvasElement[]; updateStatistics: Function } = { state: undefined, canvases: [], updateStatistics: null }) {
     // if (opts.container) {
     //   this.container = opts.container;
     // } else {
@@ -37,6 +40,7 @@ export default class Manager {
     // }
 
     this.canvases = opts.canvases;
+    this.updateStatistics = opts.updateStatistics;
 
     if (opts.state) {
       Manager.state = opts.state;
@@ -54,6 +58,7 @@ export default class Manager {
   };
 
   reset = () => {
+    this.updateStatistics({ generation: this.generation, highscore: this.highscore, longestSnake: this.longest });
     this.snakes.forEach(snake => {
       snake.reset();
     });
@@ -105,7 +110,6 @@ export default class Manager {
       title: "Highscore & Generation",
       description: JSON.stringify({ generation: this.generation, highscore: this.highscore, length: this.longest, setup: Manager.state })
     });
-    console.log(`generation: ${this.generation}`, `highscore: ${this.highscore}`, `length: ${this.longest}`);
 
     this.generation++;
     this.snakes.map(snake => {
