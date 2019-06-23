@@ -17,7 +17,6 @@ class Statistics extends React.Component<{
     let elapsedTime = "just now";
 
     const { start } = this.props;
-    console.log(start);
     if (Math.abs(moment(start).diff(Date.now())) > 1000) {
       elapsedTime = moment(start).fromNow();
     }
