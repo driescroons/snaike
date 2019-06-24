@@ -274,6 +274,29 @@ body {
     flex-direction: column;
     // color: red;
 
+    &Header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    span {
+      font-weight: 100;
+      font-size: 1em;
+    }
+
+    &Open {
+      cursor: pointer;
+    }
+
+    &Description {
+      color: black;
+    }
+
+    &Error {
+      color: red;
+    }
+
     label {
       margin: 5px 0;
       &::first-letter {
@@ -315,11 +338,6 @@ body {
         outline: none;
         border-color: #3aa3e3;
       }
-    }
-
-    span {
-      color: red;
-      // margin: 5px 0;
     }
   }
 }

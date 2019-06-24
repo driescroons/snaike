@@ -12,6 +12,14 @@ import Info from "./components/info";
 import Statistics from "./components/statistics";
 import Manager from "./manager";
 import store from "./store";
+import FormField from "./components/field";
+import fieldDescriptions from "./utils/fields";
+
+interface FormFieldInterface {
+  label: string;
+  description: string;
+  value: number;
+}
 
 export interface State {
   populationSize: number;
@@ -43,10 +51,10 @@ export default class App extends React.Component<
 
     this.state = {
       populationSize: 50,
-      mutationRate: 0.1,
+      mutationRate: 0,
       timeForSnakeToLive: 30,
-      moveTowardsScore: 1.5,
-      moveAwayFromScore: -0.5,
+      moveTowardsScore: 1,
+      moveAwayFromScore: -0,
       eatFoodScore: 30,
       gridSize: 20,
       displaySize: 100,
@@ -125,11 +133,7 @@ export default class App extends React.Component<
                     <Field
                       name={state}
                       render={({ field, form }: FieldProps<State>) => (
-                        <div className="formGroup">
-                          <label htmlFor={field.value}>{state} *</label>
-                          <input type="number" {...field} value={field.value} />
-                          {form.touched[field.name] && form.errors[field.name] && <span>{form.errors[field.name]}</span>}
-                        </div>
+                        <FormField field={field} form={form} label={fieldDescriptions[state].label} description={fieldDescriptions[state].description} value={fieldDescriptions[state].value} />
                       )}
                     />
                   ))}
