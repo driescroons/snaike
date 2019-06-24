@@ -93,7 +93,7 @@ body {
     padding: 10px;
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 700px) {
     &Close {
       position: absolute;
       top: 0;
@@ -173,7 +173,11 @@ body {
 .closeHelp {
 }
 
-@media (min-width: 500px) {
+@media (min-width: 700px) {
+  .formGroupDescription {
+    max-width: 300px;
+  }
+
   .open {
     position: absolute;
     top: 0;
@@ -181,7 +185,7 @@ body {
   }
 }
 
-@media (min-width: 500px) {
+@media (min-width: 700px) {
   .main,
   .sidebar {
     height: 100%;
@@ -216,7 +220,7 @@ body {
     // flex-direction: row;
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 700px) {
     .content {
       flex-direction: column;
     }
@@ -291,6 +295,7 @@ body {
 
     &Description {
       color: black;
+      width: 100%;
     }
 
     &Error {

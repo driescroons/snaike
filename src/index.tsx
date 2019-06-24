@@ -51,10 +51,10 @@ export default class App extends React.Component<
 
     this.state = {
       populationSize: 50,
-      mutationRate: 0,
+      mutationRate: 0.1,
       timeForSnakeToLive: 30,
-      moveTowardsScore: 1,
-      moveAwayFromScore: -0,
+      moveTowardsScore: 1.5,
+      moveAwayFromScore: -0.5,
       eatFoodScore: 30,
       gridSize: 20,
       displaySize: 100,
@@ -132,9 +132,8 @@ export default class App extends React.Component<
                   {Object.keys(this.state).map(state => (
                     <Field
                       name={state}
-                      render={({ field, form }: FieldProps<State>) => (
-                        <FormField field={field} form={form} label={fieldDescriptions[state].label} description={fieldDescriptions[state].description} value={fieldDescriptions[state].value} />
-                      )}
+                      value={(state as any).value}
+                      render={({ field, form }: FieldProps<State>) => <FormField field={field} form={form} label={fieldDescriptions[state].label} description={fieldDescriptions[state].description} />}
                     />
                   ))}
                 </Form>
